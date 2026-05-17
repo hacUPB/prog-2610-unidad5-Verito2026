@@ -31,8 +31,8 @@ def menu_1():                                           #Función de la segunda 
             graficar_palabras_frecuentes()
 
         elif opcion_txt == 3:
-            print("Histograma")
-
+            graficar_longitud_lineas()
+            
         elif opcion_txt == 4:
             print("Volviendo al menú principal...")
             break
@@ -155,6 +155,7 @@ def resumen_txt():                                        #Funcion de la primera
 
         print("No se encontró el archivo TXT")
 def graficar_palabras_frecuentes():                     #Función de la segunda opción del submenú
+
     ruta_txt = input(
         "Ingresa la ruta COMPLETA del archivo .txt: "
     )
@@ -273,6 +274,70 @@ def graficar_palabras_frecuentes():                     #Función de la segunda 
     except FileNotFoundError:
 
         print("No se encontró el archivo TXT")
+def graficar_longitud_lineas():                         #Función de la tercera opción del submenú
+
+    ruta_txt = input(
+        "Ingresa la ruta del archivo .txt: "
+    )
+
+    try:
+
+        with open(ruta_txt, "r",
+                  encoding="utf-8") as archivo:
+
+            lineas = archivo.readlines()
+
+        # Lista vacía
+        longitudes = []
+
+        # Recorrer líneas
+        for linea in lineas:
+
+            cantidad_caracteres = len(linea)
+
+            longitudes.append(
+                cantidad_caracteres
+            )
+
+        # Crear carpeta outputs
+        carpeta_output = Path("outputs")
+        carpeta_output.mkdir(
+            exist_ok=True
+        )
+
+        # Crear histograma
+        plt.figure(figsize=(8, 5))
+
+        plt.hist(longitudes)
+
+        plt.title(
+            "Distribución de longitud de líneas"
+        )
+
+        plt.xlabel(
+            "Cantidad de caracteres por línea"
+        )
+
+        plt.ylabel("Frecuencia")
+
+        # Guardar imagen
+        plt.savefig(
+            "outputs/longitud_lineas.png"
+        )
+
+        plt.show()
+
+        print(
+            "Histograma guardado correctamente"
+        )
+
+    except FileNotFoundError:
+
+        print(
+            "No se encontró el archivo TXT"
+        )
+
+
 print("==============================")
 print("Reto unidad 5")
 while True:
