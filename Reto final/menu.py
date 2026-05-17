@@ -1,10 +1,15 @@
 from pathlib import Path
 import matplotlib.pyplot as plt
-
-
+conectores = [
+    "de", "la", "el", "y", "que", "en", "un", "una", "los", "las",
+    "a", "con", "por", "para", "del", "se", "al", "es", "mi", "me",
+    "no", "lo", "más", "su", "sus", "tu", "te", "le", "les", "como",
+    "pero", "si", "sí", "ya", "o", "u", "ha", "hay", "fue", "era",
+    "ser", "son", "mis", "sin", "cuando", "había", "vez", "hasta"
+]
+signos = [".", ",", ";", ":", "¿", "?", "¡", "!", '"', "(", ")", "-", "_", "\n"]
 def explorar_directorio():                                #Funcion para la primera opción menu principal
     ruta = input("Ingrese la ruta de la carpeta: ")
-
     carpeta = Path(ruta)
     print("\nArchivos encontrados:\n")
     for archivo in carpeta.iterdir():
@@ -46,56 +51,28 @@ def resumen_txt():                                        #Funcion de la primera
 
             lineas = archivo.readlines()
 
-        # Cantidad de líneas
-        cantidad_lineas = len(lineas)
+        cantidad_lineas = len(lineas)                    #Cantidad de lineas
 
-        # Unir todo el texto
-        texto = " ".join(lineas)
+        texto = " ".join(lineas)                         # Unir todo el texto
 
-        # Caracteres con espacios
-        caracteres_con_espacios = len(texto)
+        caracteres_con_espacios = len(texto)             # Caracteres con espacios
 
         # Caracteres sin espacios
         texto_sin_espacios = texto.replace(" ", "")
+        texto_sin_espacios = texto_sin_espacios.replace("\n", "")
         caracteres_sin_espacios = len(texto_sin_espacios)
 
-        # Separar texto en palabras
-        palabras = texto.split()
+        palabras = texto.split()                          # Separar texto en palabras
 
         palabras_limpias = []
-
-        # Lista de conectores
-        conectores = [
-           "de", "la", "el", "y", "que",
-    "en", "un", "una", "los", "las",
-    "a", "con", "por", "para",
-    "del", "se", "al", "es",
-    "mi", "me", "no", "lo", "más",
-    "su", "sus", "tu", "te",
-    "le", "les", "como", "pero",
-    "si", "sí", "ya", "o",
-    "u", "ha", "hay", "fue",
-    "era", "ser", "son","mis","sin",
-    "cuando","había","vez","hasta"
-
-        ]
 
         # Limpiar palabras
         for palabra in palabras:
 
             palabra = palabra.lower()
 
-            palabra = palabra.replace(".", "")
-            palabra = palabra.replace(",", "")
-            palabra = palabra.replace(";", "")
-            palabra = palabra.replace(":", "")
-            palabra = palabra.replace("¿", "")
-            palabra = palabra.replace("?", "")
-            palabra = palabra.replace("¡", "")
-            palabra = palabra.replace("!", "")
-            palabra = palabra.replace('"', "")
-            palabra = palabra.replace("(", "")
-            palabra = palabra.replace(")", "")
+            for signo in signos:
+                palabra = palabra.replace(signo, "")
 
             # Quitar conectores
             if palabra not in conectores and palabra != "":
@@ -112,8 +89,7 @@ def resumen_txt():                                        #Funcion de la primera
             else:
                 contador_palabras[palabra] = 1
 
-        # Convertir diccionario a lista
-        palabras_ordenadas = list(contador_palabras.items())
+        palabras_ordenadas = list(contador_palabras.items())           # Convertir diccionario a lista
 
         # Método burbuja
         for i in range(len(palabras_ordenadas)):
@@ -170,36 +146,13 @@ def graficar_palabras_frecuentes():                     #Función de la segunda 
 
         palabras_limpias = []
 
-        conectores = [
-            "de", "la", "el", "y", "que",
-    "en", "un", "una", "los", "las",
-    "a", "con", "por", "para",
-    "del", "se", "al", "es",
-    "mi", "me", "no", "lo", "más",
-    "su", "sus", "tu", "te",
-    "le", "les", "como", "pero",
-    "si", "sí", "ya", "o",
-    "u", "ha", "hay", "fue",
-    "era", "ser", "son","mis","sin",
-    "cuando","había","vez","hasta"
-        ]
-
         # Limpiar palabras
         for palabra in palabras:
 
             palabra = palabra.lower()
 
-            palabra = palabra.replace(".", "")
-            palabra = palabra.replace(",", "")
-            palabra = palabra.replace(";", "")
-            palabra = palabra.replace(":", "")
-            palabra = palabra.replace("¿", "")
-            palabra = palabra.replace("?", "")
-            palabra = palabra.replace("¡", "")
-            palabra = palabra.replace("!", "")
-            palabra = palabra.replace('"', "")
-            palabra = palabra.replace("(", "")
-            palabra = palabra.replace(")", "")
+            for signo in signos:
+                palabra = palabra.replace(signo, "")
 
             if palabra not in conectores and palabra != "":
                 palabras_limpias.append(palabra)
@@ -352,6 +305,14 @@ while True:
         explorar_directorio()                           #Llamamos la función de la opción 1
     elif opcion==2:
         menu_1()                                        #Llamamos la función de la opción 2, y se despliega el submenú 1
+    elif opcion == 3:
+        print("Aquí irá la opción para analizar archivo CSV")
+
+    elif opcion == 4:
+        print("Programa finalizado")
+        break
+    else:
+        print("Opción inválida")
     
 
 
