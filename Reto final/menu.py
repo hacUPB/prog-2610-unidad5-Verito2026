@@ -35,29 +35,29 @@ def menu_1():                                           #Función de la segunda 
             print("Volviendo al menú principal...")
             break
 def procesar_palabras(texto):                           #Funcion para palabras
-
+    
     palabras = texto.split()
 
-    palabras_limpias = []
+    palabras_limpias = []                               #Creamos lista vacía
 
     # Limpiar palabras
     for palabra in palabras:
 
-        palabra = palabra.lower()
+        palabra = palabra.lower()                       #Convertimos todo a minusculas
 
         for signo in signos:
-            palabra = palabra.replace(signo, "")
+            palabra = palabra.replace(signo, "")       #Reemplazamos signos(lista al inicio) por nada, se elimina
 
-        if palabra not in conectores and palabra != "":
+        if palabra not in conectores and palabra != "":    #Sipalabra no es un conector y no quedó vacía, lo guardamos en la lista palabras_limpias
             palabras_limpias.append(palabra)
 
     # Contar frecuencia
-    contador_palabras = {}
+    contador_palabras = {}                               #Diccionario que almacena palabra=cantidad de veces que se repite
 
-    for palabra in palabras_limpias:
+    for palabra in palabras_limpias:                     #Recorremos la lista palabras_limpias
 
-        if palabra in contador_palabras:
-            contador_palabras[palabra] += 1
+        if palabra in contador_palabras:                 #Verificamos si la palabra ya está en el diccionario
+            contador_palabras[palabra] += 1              
 
         else:
             contador_palabras[palabra] = 1
@@ -84,25 +84,24 @@ def resumen_txt():                                      #Función de la primera 
 
     try:
 
-        with open(ruta_txt, "r", encoding="utf-8") as archivo:
+        with open(ruta_txt, "r", encoding="utf-8") as archivo:         #Abrimos el archivo
 
-            lineas = archivo.readlines()
+            lineas = archivo.readlines()                               #Lee todas las lineas y devuelve una lista
 
-        cantidad_lineas = len(lineas)
+        cantidad_lineas = len(lineas)                                  #Cantidad de lineas
 
-        texto = " ".join(lineas)
+        texto = " ".join(lineas)                                       #unimos todo en un solo texto corrido
 
-        caracteres_con_espacios = len(texto)
+        caracteres_con_espacios = len(texto)                           #Cuenta los caracteres incluyendo espacios
 
-        texto_sin_espacios = texto.replace(" ", "")
-        texto_sin_espacios = texto_sin_espacios.replace("\n", "")
+        texto_sin_espacios = texto.replace(" ", "")                   #Quitamos los espacios
+        texto_sin_espacios = texto_sin_espacios.replace("\n", "")      #Quitamos los saltos de linea
 
-        caracteres_sin_espacios = len(texto_sin_espacios)
+        caracteres_sin_espacios = len(texto_sin_espacios)             #Cuenta el texto sin espacio y saltos de linea
 
         palabras_limpias, palabras_ordenadas = procesar_palabras(texto)
 
-        print("\n")
-        print("RESUMEN DEL TEXTO")
+        print("\nRESUMEN DEL TEXTO")
 
         print("Cantidad de líneas:", cantidad_lineas)
         print("Cantidad de palabras:", len(palabras_limpias))
@@ -111,7 +110,7 @@ def resumen_txt():                                      #Función de la primera 
 
         print("\nTop 5 palabras más repetidas:")
 
-        for palabra, cantidad in palabras_ordenadas[:5]:
+        for palabra, cantidad in palabras_ordenadas[:5]:     #Le decimos que solo queremos las 5 primeras
 
             print("-", palabra, ":", cantidad)
 
@@ -477,9 +476,12 @@ def grafico_dispersion_csv():
             if fila[indice_x] != "" and fila[indice_y] != "":
 
                 try:
+                    # REEMPLAZOS BÁSICOS: Quitamos el $ y los puntos de miles para que float() funcione
+                    texto_x = fila[indice_x].replace("$", "").replace(".", "")
+                    texto_y = fila[indice_y].replace("$", "").replace(".", "")
 
-                    valores_x.append(float(fila[indice_x]))
-                    valores_y.append(float(fila[indice_y]))
+                    valores_x.append(float(texto_x))
+                    valores_y.append(float(texto_y))
 
                 except ValueError:
                     pass
