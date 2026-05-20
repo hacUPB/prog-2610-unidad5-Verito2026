@@ -1,5 +1,6 @@
 from pathlib import Path
 import matplotlib.pyplot as plt
+import csv
 conectores = [
     "de", "la", "el", "y", "que", "en", "un", "una", "los", "las",
     "a", "con", "por", "para", "del", "se", "al", "es", "mi", "me",
@@ -19,14 +20,12 @@ def explorar_directorio():                              #Funcion para la primera
 def menu_1():                                           #Función de la segunda opción del menú principal
     while True:
 
-        print("\n==============================")
-        print("       SUBMENÚ 1")
+        print("\nSUBMENÚ 1")
         print("1. Ver resumen estadístico del texto")
         print("2. Generar gráfico de palabras frecuentes")
         print("3. Generar histograma de longitud de líneas")
         print("4. Volver al menú principal")
-        print("==============================")
-
+        
         opcion_txt = int(input("\nSeleccione una opción: "))
 
         if opcion_txt == 1:
@@ -41,7 +40,51 @@ def menu_1():                                           #Función de la segunda 
         elif opcion_txt == 4:
             print("Volviendo al menú principal...")
             break
-def resumen_txt():                                      #Funcion de la primera opción del submenú 1
+def procesar_palabras(texto):                           #Funcion para palabras
+
+    palabras = texto.split()
+
+    palabras_limpias = []
+
+    # Limpiar palabras
+    for palabra in palabras:
+
+        palabra = palabra.lower()
+
+        for signo in signos:
+            palabra = palabra.replace(signo, "")
+
+        if palabra not in conectores and palabra != "":
+            palabras_limpias.append(palabra)
+
+    # Contar frecuencia
+    contador_palabras = {}
+
+    for palabra in palabras_limpias:
+
+        if palabra in contador_palabras:
+            contador_palabras[palabra] += 1
+
+        else:
+            contador_palabras[palabra] = 1
+
+    palabras_ordenadas = list(contador_palabras.items())
+
+    # Método burbuja
+    for i in range(len(palabras_ordenadas)):
+
+        for j in range(len(palabras_ordenadas) - 1):
+
+            if palabras_ordenadas[j][1] < palabras_ordenadas[j + 1][1]:
+
+                temporal = palabras_ordenadas[j]
+
+                palabras_ordenadas[j] = palabras_ordenadas[j + 1]
+
+                palabras_ordenadas[j + 1] = temporal
+
+    return palabras_limpias, palabras_ordenadas
+def resumen_txt():                                      #Función de la primera opción del submenú 1
 
     ruta_txt = input("Ingresa la ruta del archivo: ")
 
@@ -51,75 +94,26 @@ def resumen_txt():                                      #Funcion de la primera o
 
             lineas = archivo.readlines()
 
-        cantidad_lineas = len(lineas)                    #Cantidad de lineas
+        cantidad_lineas = len(lineas)
 
-        texto = " ".join(lineas)                         # Unir todo el texto
+        texto = " ".join(lineas)
 
-        caracteres_con_espacios = len(texto)             # Caracteres con espacios
+        caracteres_con_espacios = len(texto)
 
-        # Caracteres sin espacios
         texto_sin_espacios = texto.replace(" ", "")
         texto_sin_espacios = texto_sin_espacios.replace("\n", "")
+
         caracteres_sin_espacios = len(texto_sin_espacios)
 
-        palabras = texto.split()                          # Separar texto en palabras
+        palabras_limpias, palabras_ordenadas = procesar_palabras(texto)
 
-        palabras_limpias = []
+        print("\n")
+        print("RESUMEN DEL TEXTO")
 
-        # Limpiar palabras
-        for palabra in palabras:
-
-            palabra = palabra.lower()
-
-            for signo in signos:
-                palabra = palabra.replace(signo, "")
-
-            # Quitar conectores
-            if palabra not in conectores and palabra != "":
-                palabras_limpias.append(palabra)
-
-        # Contar frecuencia de palabras
-        contador_palabras = {}
-
-        for palabra in palabras_limpias:
-
-            if palabra in contador_palabras:
-                contador_palabras[palabra] += 1
-
-            else:
-                contador_palabras[palabra] = 1
-
-        palabras_ordenadas = list(contador_palabras.items())           # Convertir diccionario a lista
-
-        # Método burbuja
-        for i in range(len(palabras_ordenadas)):
-
-            for j in range(len(palabras_ordenadas) - 1):
-
-                if palabras_ordenadas[j][1] < palabras_ordenadas[j + 1][1]:
-
-                    temporal = palabras_ordenadas[j]
-
-                    palabras_ordenadas[j] = palabras_ordenadas[j + 1]
-
-                    palabras_ordenadas[j + 1] = temporal
-
-        # Mostrar resultados
-        print("\n==============================")
-        print("   RESUMEN DEL TEXTO")
-        print("==============================")
-
-        print("Cantidad de líneas:",
-              cantidad_lineas)
-
-        print("Cantidad de palabras:",
-              len(palabras_limpias))
-
-        print("Caracteres con espacios:",
-              caracteres_con_espacios)
-
-        print("Caracteres sin espacios:",
-              caracteres_sin_espacios)
+        print("Cantidad de líneas:", cantidad_lineas)
+        print("Cantidad de palabras:", len(palabras_limpias))
+        print("Caracteres con espacios:", caracteres_con_espacios)
+        print("Caracteres sin espacios:", caracteres_sin_espacios)
 
         print("\nTop 5 palabras más repetidas:")
 
@@ -130,11 +124,9 @@ def resumen_txt():                                      #Funcion de la primera o
     except FileNotFoundError:
 
         print("No se encontró el archivo TXT")
-def graficar_palabras_frecuentes():                     #Función de la segunda opción del submenú
+def graficar_palabras_frecuentes():                     #Función de la segunda opción del submenú 1
 
-    ruta_txt = input(
-        "Ingresa la ruta COMPLETA del archivo .txt: "
-    )
+    ruta_txt = input("Ingresa la ruta del archivo .txt: ")
 
     try:
 
@@ -142,52 +134,8 @@ def graficar_palabras_frecuentes():                     #Función de la segunda 
 
             texto = archivo.read()
 
-        palabras = texto.split()
+        palabras_limpias, palabras_ordenadas = procesar_palabras(texto)
 
-        palabras_limpias = []
-
-        # Limpiar palabras
-        for palabra in palabras:
-
-            palabra = palabra.lower()
-
-            for signo in signos:
-                palabra = palabra.replace(signo, "")
-
-            if palabra not in conectores and palabra != "":
-                palabras_limpias.append(palabra)
-
-        # Contar frecuencia
-        contador_palabras = {}
-
-        for palabra in palabras_limpias:
-
-            if palabra in contador_palabras:
-                contador_palabras[palabra] += 1
-
-            else:
-                contador_palabras[palabra] = 1
-
-        # Convertir a lista
-        palabras_ordenadas = list(
-            contador_palabras.items()
-        )
-
-        # Método burbuja
-        for i in range(len(palabras_ordenadas)):
-
-            for j in range(
-                    len(palabras_ordenadas) - 1):
-
-                if palabras_ordenadas[j][1] < palabras_ordenadas[j + 1][1]:
-
-                    temporal = palabras_ordenadas[j]
-
-                    palabras_ordenadas[j] = palabras_ordenadas[j + 1]
-
-                    palabras_ordenadas[j + 1] = temporal
-
-        # Top 10
         top_10 = palabras_ordenadas[:10]
 
         nombres = []
@@ -198,45 +146,33 @@ def graficar_palabras_frecuentes():                     #Función de la segunda 
             nombres.append(palabra)
             frecuencias.append(cantidad)
 
-        # Crear carpeta outputs
         carpeta_output = Path("outputs")
         carpeta_output.mkdir(exist_ok=True)
 
-        # Crear gráfica
         plt.figure(figsize=(8, 5))
 
         plt.barh(nombres, frecuencias)
 
-        plt.title(
-            "10 palabras más frecuentes en El gato negro"
-        )
-
+        plt.title("10 palabras más frecuentes")
         plt.xlabel("Frecuencia")
         plt.ylabel("Palabras")
 
-        plt.savefig(
-            "outputs/palabras_frecuentes.png"
-        )
+        plt.savefig("outputs/palabras_frecuentes.png")
 
         plt.show()
 
-        print(
-            "Gráfico guardado correctamente"
-        )
+        print("Gráfico guardado correctamente")
 
     except FileNotFoundError:
 
         print("No se encontró el archivo TXT")
 def graficar_longitud_lineas():                         #Función de la tercera opción del submenú
 
-    ruta_txt = input(
-        "Ingresa la ruta del archivo .txt: "
-    )
+    ruta_txt = input("Ingresa la ruta del archivo .txt: ")
 
     try:
 
-        with open(ruta_txt, "r",
-                  encoding="utf-8") as archivo:
+        with open(ruta_txt, "r",encoding="utf-8") as archivo:
 
             lineas = archivo.readlines()
 
@@ -248,50 +184,328 @@ def graficar_longitud_lineas():                         #Función de la tercera 
 
             cantidad_caracteres = len(linea)
 
-            longitudes.append(
-                cantidad_caracteres
-            )
+            longitudes.append(cantidad_caracteres)
 
         # Crear carpeta outputs
         carpeta_output = Path("outputs")
-        carpeta_output.mkdir(
-            exist_ok=True
-        )
+        carpeta_output.mkdir(exist_ok=True)
 
         # Crear histograma
         plt.figure(figsize=(8, 5))
 
         plt.hist(longitudes)
 
-        plt.title(
-            "Distribución de longitud de líneas"
-        )
+        plt.title("Distribución de longitud de líneas")
 
-        plt.xlabel(
-            "Cantidad de caracteres por línea"
-        )
+        plt.xlabel("Cantidad de caracteres por línea")
 
         plt.ylabel("Frecuencia")
 
         # Guardar imagen
-        plt.savefig(
-            "outputs/longitud_lineas.png"
-        )
+        plt.savefig("outputs/longitud_lineas.png")
 
         plt.show()
 
-        print(
-            "Histograma guardado correctamente"
-        )
+        print("Histograma guardado correctamente")
 
     except FileNotFoundError:
 
-        print(
-            "No se encontró el archivo TXT"
-        )
+        print("No se encontró el archivo TXT")
+def menu_2():                                           #Función de la tercera opción del menú principal
 
+    while True:
+
+        print("\nSUBMENÚ CSV")
+        print("1. Vista previa de datos")
+        print("2. Estadísticas descriptivas")
+        print("3. Gráfico de líneas")
+        print("4. Gráfico de pastel")
+        print("5. Gráfico de dispersión")
+        print("6. Volver al menú principal")
+        print("==============================")
+
+        opcion_csv = int(input("\nSeleccione una opción: "))
+
+        if opcion_csv == 1:
+            vista_previa_csv()
+
+        elif opcion_csv == 2:
+            estadisticas_csv()
+
+        elif opcion_csv == 3:
+            grafico_lineas_csv()
+
+        elif opcion_csv == 4:
+            grafico_pastel_csv()
+        elif opcion_csv == 5:
+            grafico_dispersion_csv()
+
+        elif opcion_csv == 6:
+            print("Volviendo al menú principal...")
+            break
+
+        else:
+            print("Opción inválida")
+def vista_previa_csv():                                 #Función de la primera opción del submenú 2
+
+    ruta_csv = input("Ingresa la ruta del archivo CSV: ")
+
+    try:
+
+        with open(ruta_csv,"r",encoding="utf-8") as archivo:
+
+            lector = csv.reader(archivo)
+            datos = list(lector)
+
+        print("\nPRIMERAS 10 FILAS")
+
+        for fila in datos[:10]:
+
+            print(fila)
+
+
+        print("\nÚLTIMAS 5 FILAS")
+
+        for fila in datos[-5:]:
+
+            print(fila)
+
+    except FileNotFoundError:
+
+        print("No se encontró el archivo CSV")
+def estadisticas_csv():                                 #Función de la segunda opción del submenú 2
+
+    ruta_csv = input("Ingresa la ruta del archivo CSV: ")
+
+    try:
+
+        with open(ruta_csv, "r", encoding="utf-8") as archivo:
+
+            lector = csv.reader(archivo)
+            datos = list(lector)
+
+        encabezados = datos[0]
+
+        print("\nColumnas disponibles:")
+
+        for encabezado in encabezados:
+            print("-", encabezado)
+
+        columna = input("Ingrese el nombre de la columna numérica: ")
+
+        indice = encabezados.index(columna)
+
+        valores = []
+
+        for fila in datos[1:]:
+
+            if fila[indice] != "":
+
+                try:
+                    valores.append(float(fila[indice]))
+
+                except ValueError:
+                    pass
+
+        promedio = sum(valores) / len(valores)
+
+        valores.sort()
+
+        if len(valores) % 2 == 0:
+
+            mediana = (valores[len(valores)//2 - 1] + valores[len(valores)//2]) / 2
+
+        else:
+
+            mediana = valores[len(valores)//2]
+
+        print("\nTotal registros válidos:", len(valores))
+        print("Promedio:", promedio)
+        print("Mediana:", mediana)
+        print("Máximo:", max(valores))
+        print("Mínimo:", min(valores))
+
+    except FileNotFoundError:
+
+        print("No se encontró el archivo CSV")
+def grafico_lineas_csv():                               #Funcion de la tercera opción del submenú 2
+
+    ruta_csv = input("Ingresa la ruta del archivo CSV: ")
+
+    try:
+
+        with open(ruta_csv, "r", encoding="utf-8") as archivo:
+
+            lector = csv.reader(archivo)
+            datos = list(lector)
+
+        encabezados = datos[0]
+
+        print("\nColumnas disponibles:")
+
+        for encabezado in encabezados:
+            print("-", encabezado)
+
+        columna_x = input("Ingrese el nombre de la columna para el eje X: ")
+        columna_y = input("Ingrese el nombre de la columna para el eje Y: ")
+
+        indice_x = encabezados.index(columna_x)
+        indice_y = encabezados.index(columna_y)
+
+        valores_x = []
+        valores_y = []
+
+        for fila in datos[1:]:
+
+            if fila[indice_x] != "" and fila[indice_y] != "":
+
+                try:
+
+                    valores_x.append(fila[indice_x])
+                    valores_y.append(float(fila[indice_y]))
+
+                except ValueError:
+                    pass
+
+        plt.figure(figsize=(8,5))
+
+        plt.plot(valores_x, valores_y)
+
+        plt.title("Evolución temporal")
+        plt.xlabel(columna_x)
+        plt.ylabel(columna_y)
+
+        plt.xticks(rotation=45)
+
+        carpeta_output = Path("outputs")
+        carpeta_output.mkdir(exist_ok=True)
+
+        plt.savefig("outputs/grafico_lineas.png")
+
+        plt.show()
+
+        print("Gráfico guardado correctamente")
+
+    except FileNotFoundError:
+
+        print("No se encontró el archivo CSV")
+def grafico_pastel_csv():                               #Función de la cuarta opcion del submenú 2
+
+    ruta_csv = input("Ingresa la ruta del archivo CSV: ")
+
+    try:
+
+        with open(ruta_csv, "r", encoding="utf-8") as archivo:
+
+            lector = csv.reader(archivo)
+            datos = list(lector)
+
+        encabezados = datos[0]
+
+        print("\nColumnas disponibles:")
+
+        for encabezado in encabezados:
+            print("-", encabezado)
+
+        columna = input("Ingrese el nombre de la columna categórica: ")
+
+        indice = encabezados.index(columna)
+
+        categorias = {}
+
+        for fila in datos[1:]:
+
+            if fila[indice] != "":
+
+                valor = fila[indice]
+
+                if valor in categorias:
+                    categorias[valor] += 1
+
+                else:
+                    categorias[valor] = 1
+
+        nombres = list(categorias.keys())
+        cantidades = list(categorias.values())
+
+        plt.figure(figsize=(8,5))
+
+        plt.pie(cantidades, labels=nombres, autopct="%1.1f%%")
+
+        plt.title("Comparación categórica")
+
+        carpeta_output = Path("outputs")
+        carpeta_output.mkdir(exist_ok=True)
+
+        plt.savefig("outputs/grafico_pastel.png")
+
+        plt.show()
+
+        print("Gráfico guardado correctamente")
+
+    except FileNotFoundError:
+
+        print("No se encontró el archivo CSV")
+def grafico_dispersion_csv():
+
+    ruta_csv = input("Ingresa la ruta del archivo CSV: ")
+
+    try:
+
+        with open(ruta_csv, "r", encoding="utf-8") as archivo:
+
+            lector = csv.reader(archivo)
+            datos = list(lector)
+
+        encabezados = datos[0]
+
+        print("\nColumnas disponibles:")
+
+        for encabezado in encabezados:
+            print("-", encabezado)
+
+        columna_x = input("Ingrese la primera columna numérica: ")
+        columna_y = input("Ingrese la segunda columna numérica: ")
+
+        indice_x = encabezados.index(columna_x)
+        indice_y = encabezados.index(columna_y)
+
+        valores_x = []
+        valores_y = []
+
+        for fila in datos[1:]:
+
+            if fila[indice_x] != "" and fila[indice_y] != "":
+
+                try:
+
+                    valores_x.append(float(fila[indice_x]))
+                    valores_y.append(float(fila[indice_y]))
+
+                except ValueError:
+                    pass
+
+        plt.figure(figsize=(8,5))
+
+        plt.scatter(valores_x, valores_y)
+
+        plt.title("Correlación de variables")
+        plt.xlabel(columna_x)
+        plt.ylabel(columna_y)
+
+        carpeta_output = Path("outputs")
+        carpeta_output.mkdir(exist_ok=True)
+
+        plt.savefig("outputs/grafico_dispersion.png")
+
+        plt.show()
+
+        print("Gráfico guardado correctamente")
+
+    except FileNotFoundError:
+
+        print("No se encontró el archivo CSV")
 #Menú principal donde llamamos las funciones
-print("==============================")
 print("Reto unidad 5")
 while True:
     print("\nSelecciona una opción del menú")
@@ -306,7 +520,7 @@ while True:
     elif opcion==2:
         menu_1()                                        #Llamamos la función de la opción 2, y se despliega el submenú 1
     elif opcion == 3:
-        print("Aquí irá la opción para analizar archivo CSV")
+        menu_2()                                        #Llamamos la función de la opción 3, y se despliega el submenú 2
 
     elif opcion == 4:
         print("Programa finalizado")
