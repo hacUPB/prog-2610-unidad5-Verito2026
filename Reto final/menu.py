@@ -1,13 +1,7 @@
 from pathlib import Path
 import matplotlib.pyplot as plt
 import csv
-conectores = [
-    "de", "la", "el", "y", "que", "en", "un", "una", "los", "las",
-    "a", "con", "por", "para", "del", "se", "al", "es", "mi", "me",
-    "no", "lo", "más", "su", "sus", "tu", "te", "le", "les", "como",
-    "pero", "si", "sí", "ya", "o", "u", "ha", "hay", "fue", "era",
-    "ser", "son", "mis", "sin", "cuando", "había", "vez", "hasta"
-]
+conectores = ["de", "la", "el", "y", "que", "en", "un", "una", "los", "las", "a", "con", "por", "para", "del", "se", "al", "es", "mi", "me", "no", "lo", "más", "su", "sus", "tu", "te", "le", "les", "como", "pero", "si", "sí", "ya", "o", "u", "ha", "hay", "fue", "era", "ser", "son", "mis", "sin", "cuando", "había", "vez", "hasta"]
 signos = [".", ",", ";", ":", "¿", "?", "¡", "!", '"', "(", ")", "-", "_", "\n"]
 def explorar_directorio():                              #Funcion para la primera opción menu principal
     ruta = input("Ingrese la ruta de la carpeta: ")
@@ -222,7 +216,6 @@ def menu_2():                                           #Función de la tercera 
         print("4. Gráfico de pastel")
         print("5. Gráfico de dispersión")
         print("6. Volver al menú principal")
-        print("==============================")
 
         opcion_csv = int(input("\nSeleccione una opción: "))
 
@@ -312,11 +305,8 @@ def estadisticas_csv():                                 #Función de la segunda 
         valores.sort()
 
         if len(valores) % 2 == 0:
-
             mediana = (valores[len(valores)//2 - 1] + valores[len(valores)//2]) / 2
-
         else:
-
             mediana = valores[len(valores)//2]
 
         print("\nTotal registros válidos:", len(valores))
@@ -328,7 +318,7 @@ def estadisticas_csv():                                 #Función de la segunda 
     except FileNotFoundError:
 
         print("No se encontró el archivo CSV")
-def grafico_lineas_csv():                               #Funcion de la tercera opción del submenú 2
+def grafico_lineas_csv():                               #Función de la tercera opción del submenú 2
 
     ruta_csv = input("Ingresa la ruta del archivo CSV: ")
 
@@ -346,8 +336,13 @@ def grafico_lineas_csv():                               #Funcion de la tercera o
         for encabezado in encabezados:
             print("-", encabezado)
 
-        columna_x = input("Ingrese el nombre de la columna para el eje X: ")
-        columna_y = input("Ingrese el nombre de la columna para el eje Y: ")
+        columna_x = input(
+            "Ingrese el nombre de la columna para el eje X: "
+        )
+
+        columna_y = input(
+            "Ingrese el nombre de la columna para el eje Y: "
+        )
 
         indice_x = encabezados.index(columna_x)
         indice_y = encabezados.index(columna_y)
@@ -361,13 +356,15 @@ def grafico_lineas_csv():                               #Funcion de la tercera o
 
                 try:
 
+                    y = fila[indice_y].replace(",", ".")
+
                     valores_x.append(fila[indice_x])
-                    valores_y.append(float(fila[indice_y]))
+                    valores_y.append(float(y))
 
                 except ValueError:
                     pass
 
-        plt.figure(figsize=(8,5))
+        plt.figure(figsize=(8, 5))
 
         plt.plot(valores_x, valores_y)
 
@@ -380,7 +377,9 @@ def grafico_lineas_csv():                               #Funcion de la tercera o
         carpeta_output = Path("outputs")
         carpeta_output.mkdir(exist_ok=True)
 
-        plt.savefig("outputs/grafico_lineas.png")
+        plt.savefig(
+            "outputs/grafico_lineas.png"
+        )
 
         plt.show()
 
