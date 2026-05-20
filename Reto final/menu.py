@@ -8,7 +8,7 @@ conectores = [
     "ser", "son", "mis", "sin", "cuando", "había", "vez", "hasta"
 ]
 signos = [".", ",", ";", ":", "¿", "?", "¡", "!", '"', "(", ")", "-", "_", "\n"]
-def explorar_directorio():                                #Funcion para la primera opción menu principal
+def explorar_directorio():                              #Funcion para la primera opción menu principal
     ruta = input("Ingrese la ruta de la carpeta: ")
     carpeta = Path(ruta)
     print("\nArchivos encontrados:\n")
@@ -41,7 +41,7 @@ def menu_1():                                           #Función de la segunda 
         elif opcion_txt == 4:
             print("Volviendo al menú principal...")
             break
-def resumen_txt():                                        #Funcion de la primera opción del submenú 1
+def resumen_txt():                                      #Funcion de la primera opción del submenú 1
 
     ruta_txt = input("Ingresa la ruta del archivo: ")
 
@@ -290,7 +290,7 @@ def graficar_longitud_lineas():                         #Función de la tercera 
             "No se encontró el archivo TXT"
         )
 
-
+#Menú principal donde llamamos las funciones
 print("==============================")
 print("Reto unidad 5")
 while True:
