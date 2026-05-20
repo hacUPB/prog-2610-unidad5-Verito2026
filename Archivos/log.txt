@@ -1,0 +1,10 @@
+C:/Users/VERONICA/AppData/Local/Python/pythoncore-3.14-64/python.exe c:/Users/VERONICA/Documents/Programación/prog-2610-unidad5-Verito2026/Archivos/Ejemplo_3.pyholaaa18
+159.0+
+hola159.0
+holaaa18
+159.0
+verito18
+159.0
+verito
+18
+159.0
